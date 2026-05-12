@@ -14,6 +14,12 @@ app.get("/", (req, res) => {
 
 app.get("/google-reviews", async (req, res) => {
   try {
+    if (!GOOGLE_API_KEY || !PLACE_ID) {
+      return res.status(400).json({
+        erro: "GOOGLE_API_KEY ou PLACE_ID não configurados na Vercel"
+      });
+    }
+
     const response = await fetch(
       `https://places.googleapis.com/v1/places/${PLACE_ID}`,
       {
@@ -27,18 +33,26 @@ app.get("/google-reviews", async (req, res) => {
 
     const data = await response.json();
 
+    if (!response.ok) {
+      return res.status(response.status).json({
+        erro: "Erro retornado pelo Google",
+        status: response.status,
+        detalhes: data
+      });
+    }
+
     res.json({
       empresa: data.displayName?.text || "Neocooler",
       nota: data.rating || 0,
       total: data.userRatingCount || 0,
-      avaliacoes: data.reviews || []
+      avaliacoes: data.reviews || [],
+      googleOriginal: data
     });
 
   } catch (error) {
-    console.log(error);
-
     res.status(500).json({
-      erro: "Erro ao buscar avaliações"
+      erro: "Erro interno na API",
+      detalhes: error.message
     });
   }
 });
