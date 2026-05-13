@@ -26,7 +26,7 @@ app.get("/google-reviews", async (req, res) => {
         headers: {
           "X-Goog-Api-Key": GOOGLE_API_KEY,
           "X-Goog-FieldMask":
-            "displayName,rating,userRatingCount,reviews"
+          "displayName,rating,userRatingCount,reviews,googleMapsUri"
         }
       }
     );
