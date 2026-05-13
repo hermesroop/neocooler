@@ -41,13 +41,13 @@ app.get("/google-reviews", async (req, res) => {
       });
     }
 
-    res.json({
-      empresa: data.displayName?.text || "Neocooler",
-      nota: data.rating || 0,
-      total: data.userRatingCount || 0,
-      avaliacoes: data.reviews || [],
-      googleOriginal: data
-    });
+res.json({
+  empresa: data.displayName?.text || "Neocooler",
+  nota: data.rating || 0,
+  total: data.userRatingCount || 0,
+  avaliacoes: data.reviews || [],
+  linkGoogle: data.googleMapsUri || ""
+});
 
   } catch (error) {
     res.status(500).json({
